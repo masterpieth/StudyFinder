@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nyk.sf.dao.StudyMapper">
+	<insert id="createStudy" parameterType="studyVO">
+		insert into sf_study
+		(
+		study_no,
+		study_title,
+		study_content,
+		loc_no,
+		field_no,
+		study_level,
+		study_headCount,
+		study_inputdate,
+		study_hit,
+		auth_userid,
+		due_time,
+		penalty_min,
+		penalty_money,
+		limit_time
+		)
+		values
+		(
+		sf_study_seq.nextval,
+		#{study_title},
+		#{study_content},
+		#{loc_no},
+		#{field_no},
+		#{study_level},
+		#{study_headCount},
+		sysdate,
+		0,
+		#{auth_userid},
+		#{due_time},
+		#{penalty_min},
+		#{penalty_money},
+		#{limit_time}
+		)
+	</insert>
+
+	<select id="studyList" resultType="studyVO">
+		select *
+		from sf_study order by study_no desc
+	</select>
+
+	<select id="studyInfo" resultType="studyVO" parameterType="int">
+		select *
+		from sf_study where study_no = #{study_no}
+	</select>
+</mapper>
