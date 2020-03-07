@@ -21,153 +21,42 @@
 <link
 	href="${pageContext.request.contextPath}/resources/dist/css/style.min.css"
 	rel="stylesheet">
-<title>글읽기</title>
+<title>글작성</title>
 <script src="/sf/resources/js/jquery-3.4.1.js"></script>
 <script>
 	$(function() {
-		deleteStudy();
-		writeReply();
-		deleteReply();
-		insertStudyMember();
+		var radioVal = "${study.study_level}";
+		$()
 	});
 
-	function deleteStudy() {
-		$('#deleteBtn').on('click', function() {
-			var s_no = '${study.study_no}';
+	function inputTimeColon(time) {
 
-			$.ajax({
-				url : "deleteStudy",
-				type : "get",
-				data : {
-					study_no : s_no
-				},
-				success : function(data) {
-					if (data) {
-						location.href = '<c:url value="/study/studyList"/>';
-					} else {
-						$('#deleteResult').html("삭제에 실패하였습니다.");
-						deleteStudy();
-					}
-				},
-				error : function() {
-				}
-			});
-		});
-	}
-	function writeReply() {
-		$('#replyBtn').on('click', function() {
-			var replyContent = $('#b_content').val();
-			var loginId = "${sessionScope.userid}";
-			var studyNum = "${study.study_no}";
+		var replaceTime = time.value.replace(/\:/g, "");
 
-			var paramObj = {
-				study_no : studyNum,
-				userid : loginId,
-				reply_text : replyContent
-			};
+		if (replaceTime.length >= 4 && replaceTime.length < 5) {
 
-			$.ajax({
-				url : "writeReply",
-				type : "post",
-				data : JSON.stringify(paramObj),
-				contentType : "application/json",
-				success : function(data) {
-					$('#replyUserid').html(loginId);
-					$('#b_content').val("");
-					replyOutput(data);
-					deleteReply();
-				},
-				error : function() {
-				}
-			});
-		});
-	}
+			var hours = replaceTime.substring(0, 2);
+			var minute = replaceTime.substring(2, 4);
 
-	function replyOutput(data) {
-		var str = '';
-		$
-				.each(
-						data,
-						function(index, item) {
-							str += '<tr><td>' + item.reply_no + '</td>';
-							str += '<td>' + item.userid + '</td>';
-							str += '<td>' + item.reply_text + '</td>';
-							str += '<td>' + item.reply_inputdate + '</td>';
-							if (item.userid == "${sessionScope.userid}") {
-								str += '<td><input type="button" class="btn btn-secondary deleteReplyBtn" value="삭제"></td></tr>';
-							} else if ("${study.auth_userid}" == "${sessionScope.userid}" && item.permission == 0) {
-								str += '<td><input type="button" class="btn btn-info joinBtn" id="rno'+ item.reply_no +'" value="승인"></td></tr>';
-							} else if ("${study.auth_userid}" == "${sessionScope.userid}" && item.permission == 1) {
-								str += '<td><input type="button" class="btn btn-info joinBtn" id="rno'+ item.reply_no +'" disabled="disabled" value="승인"></td></tr>'
-							}
-						});
-		$('#replyTbody').html(str);
-	}
+			if (isFinite(hours + minute) == false) {
+				alert("문자는 입력하실 수 없습니다.");
+				time.value = "00:00";
+				return false;
+			}
 
-	function deleteReply() {
-		$('.deleteReplyBtn').on('click', function() {
-			var replyNo = $(this).closest('tr').find('td').eq(0).text();
-			var studyNo = "${study.study_no}";
-			var studyNoInt = parseInt(studyNo, 10);
-			$.ajax({
-				url : "deleteReply",
-				type : "get",
-				data : {
-					reply_no : replyNo,
-					study_no : studyNoInt
-				},
-				success : function(data) {
-					replyOutput(data);
-					deleteReply();
-				},
-				error : function(e) {
-					console.log(e);
-				}
-			});
-		});
-	}
-	function insertStudyMember() {
-		$('.joinBtn')
-				.on(
-						'click',
-						function() {
-							var studyNo = "${study.study_no}";
-							var studyNoInt = parseInt(studyNo, 10);
+			if (hours + minute > 2400) {
+				alert("시간은 24시를 넘길 수 없습니다.");
+				time.value = "24:00";
+				return false;
+			}
 
-							var replyNo = $(this).closest('tr').find('td')
-									.eq(0).text();
-							var targetBtnId = "rno" + replyNo;
-
-							var part_user = $(this).closest('tr').find('td')
-									.eq(1).text();
-							var auth_user = "${study.auth_userid}";
-
-							var paramObj = {
-								study_no : studyNoInt,
-								auth_userid : auth_user,
-								part_userid : part_user,
-							}
-
-							$.ajax({
-								url : "insertStudyMember",
-								type : "post",
-								data : JSON.stringify(paramObj),
-								contentType : "application/json",
-								success : function(data) {
-									if (data) {
-										alert("승인에 성공하였습니다.");
-										$('#' + $.escapeSelector(targetBtnId))
-												.attr('disabled', 'disabled');
-										replyOutput(data);
-									} else {
-										alert("승인에 실패하였습니다.");
-									}
-								},
-								error : function(e) {
-									console.log(e);
-								}
-							});
-						});
+			if (minute > 60) {
+				alert("분은 60분을 넘길 수 없습니다.");
+				time.value = hours + ":00";
+				return false;
+			}
+			time.value = hours + ":" + minute;
+		}
 	}
 </script>
 </head>
@@ -230,7 +119,8 @@
 										<a class="dropdown-item" href="javascript:void(0)"><i
 											class="ti-user m-r-5 m-l-5"></i> ${sessionScope.userid} 님</a>
 										<div class="dropdown-divider"></div>
-										<a class="dropdown-item" href="<c:url value="/member/myPage"/>"><i
+										<a class="dropdown-item"
+											href="<c:url value="/member/myPage"/>"><i
 											class="ti-user m-r-5 m-l-5"></i> 마이페이지</a>
 										<div class="dropdown-divider"></div>
 										<a class="dropdown-item"
@@ -268,7 +158,7 @@
 					<ul id="sidebarnav" class="p-t-30">
 						<li class="sidebar-item"><a
 							class="sidebar-link waves-effect waves-dark sidebar-link"
-							href="<c:url value="/study/studyList"/>" aria-expanded="false">
+							href="<c:url value="/board/boardList"/>" aria-expanded="false">
 								<i class="m-r-10 mdi mdi-human-greeting"></i><span
 								class="hide-menu"> 스터디 찾기 </span>
 						</a>
@@ -276,7 +166,7 @@
 							</ul></li>
 						<li class="sidebar-item"><a
 							class="sidebar-link waves-effect waves-dark sidebar-link"
-							href="<c:url value="/study/myStudy"/>" aria-expanded="false"><i
+							href="charts.html" aria-expanded="false"><i
 								class="m-r-10 mdi mdi-clipboard-check"></i><span
 								class="hide-menu"> 스터디 현황</span></a></li>
 						<li class="sidebar-item"><a
@@ -299,191 +189,168 @@
 					<div class="col-md-12">
 						<div class="card card-body printableArea">
 							<h3>
-								<b>스터디 조회</b>
+								<b>스터디 수정</b>
 							</h3>
 							<hr>
 							<div class="row">
 								<div class="col-md-12">
 									<div class="card">
 										<div class="card-body">
-											<form action="<c:url value="/study/createStudy"/>"
+											<form action="<c:url value="/study/updateStudy"/>"
 												method="post" id="studyForm">
 												<div class="form-group row">
 													<label
 														class="col-sm-2 text-center control-label col-form-label">스터디
 														이름</label>
-													<div class="col-sm-10">${study.study_title}</div>
+													<div class="col-sm-10">
+														<input type="text" class="form-control form-control-line"
+															name="study_title" placeholder="스터디명 입력"
+															value="${study.study_title}"> <input
+															type="hidden" name="study_no" value="${study.study_no}">
+													</div>
 												</div>
-												<hr>
 												<div class="form-group row">
 													<label
 														class="col-sm-2 text-center control-label col-form-label">작성자</label>
 													<div class="col-sm-10">
 														<input type="text" class="form-control form-control-line"
 															name="auth_userid" id="userid"
-															value="${study.auth_userid}" readonly="readonly">
+															value="${sessionScope.userid}" readonly="readonly">
 													</div>
 												</div>
-												<hr>
 												<div class="form-group row">
 													<label
 														class="col-sm-2 text-center control-label col-form-label">지역</label>
 													<div class="col-sm-10">
-														<c:choose>
-															<c:when test="${study.loc_no == 1}">서울</c:when>
-															<c:when test="${study.loc_no == 2}">경기</c:when>
-															<c:when test="${study.loc_no == 3}">경상</c:when>
-															<c:when test="${study.loc_no == 4}">전라</c:when>
-															<c:when test="${study.loc_no == 5}">제주</c:when>
-														</c:choose>
+														<select name="loc_no"
+															class="form-control form-control-line">
+															<option value="1">서울</option>
+															<option value="2">경기</option>
+															<option value="3">경상</option>
+															<option value="4">전라</option>
+															<option value="5">제주</option>
+														</select>
 													</div>
 												</div>
 												<div class="form-group row">
 													<label
 														class="col-sm-2 text-center control-label col-form-label">분야</label>
 													<div class="col-sm-10">
-														<c:choose>
-															<c:when test="${study.field_no == 1}">자격증</c:when>
-															<c:when test="${study.field_no == 2}">고시</c:when>
-															<c:when test="${study.field_no == 3}">출석</c:when>
-															<c:when test="${study.field_no == 4}">취업</c:when>
-															<c:when test="${study.field_no == 5}">기타</c:when>
-														</c:choose>
+														<select name="field_no"
+															class="form-control form-control-line">
+															<option value="1">자격증</option>
+															<option value="2">고시</option>
+															<option value="3">출석</option>
+															<option value="4">취업</option>
+															<option value="5">기타</option>
+														</select>
 													</div>
 												</div>
 												<div class="form-group row">
 													<label
 														class="col-sm-2 text-center control-label col-form-label">레벨</label>
 													<div class="col-sm-10">
-														<c:choose>
-															<c:when test="${study.study_level == 1}">초급</c:when>
-															<c:when test="${study.study_level == 2}">중급</c:when>
-															<c:when test="${study.study_level == 3}">고급</c:when>
-															<c:when test="${study.study_level == 0}">해당없음</c:when>
-														</c:choose>
+														<div class="custom-control custom-radio">
+															<input type="radio" class="custom-control-input"
+																id="customControlValidation1" name="study_level"
+																value="1" checked="checked"> <label
+																class="custom-control-label"
+																for="customControlValidation1">초급</label>
+														</div>
+														<div class="custom-control custom-radio">
+															<input type="radio" class="custom-control-input"
+																id="customControlValidation2" name="study_level"
+																value="2"> <label class="custom-control-label"
+																for="customControlValidation2">중급</label>
+														</div>
+														<div class="custom-control custom-radio">
+															<input type="radio" class="custom-control-input"
+																id="customControlValidation3" name="study_level"
+																value="3"> <label class="custom-control-label"
+																for="customControlValidation3">고급</label>
+														</div>
+														<div class="custom-control custom-radio">
+															<input type="radio" class="custom-control-input"
+																id="customControlValidation4" name="study_level"
+																value="0"> <label class="custom-control-label"
+																for="customControlValidation4">해당없음</label>
+														</div>
 													</div>
 												</div>
 												<div class="form-group row">
 													<label
 														class="col-sm-2 text-center control-label col-form-label">인원수</label>
-													<div class="col-sm-10">${study.study_headCount}명</div>
+													<div class="col-sm-10">
+														<input type="number"
+															class="form-control form-control-line"
+															name="study_headCount" placeholder="최소 2명, 최대 10명"
+															min="2" max="10" value="${study.study_headCount}"
+															readonly="readonly">
+													</div>
 												</div>
-												<hr>
 												<div class="form-group row">
 													<label
 														class="col-sm-2 text-center control-label col-form-label">스터디
 														규칙</label>
-													<div class="col-sm-10">${study.study_content}</div>
+													<div class="col-sm-10">
+														<textarea rows="3" cols="40" class="form-control"
+															name="study_content" style="resize: none;">${study.study_content}</textarea>
+													</div>
 												</div>
-												<hr>
 												<div class="form-group row">
 													<label
 														class="col-sm-2 text-center control-label col-form-label">체크시간</label>
-													<div class="col-sm-10">${study.due_time}까지</div>
+													<div class="col-sm-10">
+														<input type="text" class="form-control form-control-line"
+															name="due_time" onKeyup="inputTimeColon(this);"
+															placeholder="인증 제출시간 입력: HH:MM까지 인증" maxlength="5"
+															value="${study.due_time}">
+													</div>
 												</div>
 												<div class="form-group row">
 													<label
 														class="col-sm-2 text-center control-label col-form-label">벌금기준</label>
-													<div class="col-sm-10">${study.penalty_min}분마다</div>
+													<div class="col-sm-10">
+														<input type="number"
+															class="form-control form-control-line" name="penalty_min"
+															placeholder="벌금 기준 시간 입력: MM분마다" min="0" max="60"
+															value="${study.penalty_min}">
+													</div>
 												</div>
 												<div class="form-group row">
 													<label
 														class="col-sm-2 text-center control-label col-form-label">벌금</label>
-													<div class="col-sm-10">${study.penalty_money}원</div>
+													<div class="col-sm-10">
+														<input type="number"
+															class="form-control form-control-line"
+															name="penalty_money" placeholder="벌금입력" min="0"
+															value="${study.penalty_money}">
+													</div>
 												</div>
 												<div class="form-group row">
 													<label
 														class="col-sm-2 text-center control-label col-form-label">결석기준</label>
-													<div class="col-sm-10">${study.limit_time}이후결석</div>
+													<div class="col-sm-10">
+														<input type="text" class="form-control form-control-line"
+															name="limit_time" onKeyup="inputTimeColon(this);"
+															placeholder="결석 기준 시간 입력: HH:MM이후 결석" maxlength="5"
+															value="${study.limit_time}">
+													</div>
+												</div>
+												<hr>
+												<div class="form-group row">
+													<div class="col-md-12 text-right">
+														<input type="submit" class="btn btn-info" value="글수정">
+														<input type="button" class="btn btn-dark" value="돌아가기">
+													</div>
 												</div>
 											</form>
-											<hr>
-											<div class="form-group row">
-												<label
-													class="col-sm-2 text-center control-label col-form-label">신청목록</label>
-												<div class="col-md-10" id="replyDiv">
-													<div class="table-responsive">
-														<table class="table">
-															<thead>
-																<tr>
-																	<th>번호</th>
-																	<th>아이디</th>
-																	<th>내용</th>
-																	<th>작성일</th>
-																	<th>선택</th>
-																</tr>
-															</thead>
-															<tbody id="replyTbody">
-																<c:forEach items="${replyList}" var="reply">
-																	<tr>
-																		<td>${reply.reply_no}</td>
-																		<td>${reply.userid}</td>
-																		<td>${reply.reply_text}</td>
-																		<td>${reply.reply_inputdate}</td>
-																		<c:choose>
-																			<c:when
-																				test="${study.auth_userid == sessionScope.userid && reply.permission == 0}">
-																				<td><input type="button"
-																					class="btn btn-info joinBtn"
-																					id="rno${reply.reply_no}" value="승인"></td>
-																			</c:when>
-																			<c:when
-																				test="${study.auth_userid == sessionScope.userid && reply.permission == 1}">
-																				<td><input type="button"
-																					class="btn btn-info joinBtn"
-																					id="rno${reply.reply_no}" disabled="disabled"
-																					value="승인"></td>
-																			</c:when>
-																			<c:when test="${sessionScope.userid == reply.userid}">
-																				<td><input type="button"
-																					class="btn btn-secondary deleteReplyBtn" value="삭제"></td>
-																			</c:when>
-																		</c:choose>
-																	<tr>
-																</c:forEach>
-															</tbody>
-														</table>
-													</div>
-												</div>
-											</div>
-											<hr>
-											<c:if test="${sessionScope.userid != study.auth_userid}">
-												<div class="form-group row">
-													<label
-														class="col-sm-2 text-center control-label col-form-label">신청하기</label>
-													<div class="col-md-8">
-														<textarea rows="3" cols="40" class="form-control"
-															id="b_content" style="resize: none;" placeholder="내용 작성"></textarea>
-													</div>
-													<div class="col-sm-0" style="vertical-align: middle;">
-														<input type="button" class="btn btn-info" value="신청"
-															id="replyBtn">
-													</div>
-												</div>
-											</c:if>
-											<div class="form-group row">
-												<div class="col-md-12 text-right">
-													<c:if test="${sessionScope.userid == study.auth_userid}">
-														<a
-															href="<c:url value="/study/updateStudy?study_no=${study.study_no}"/>">
-															<input type="button" id="sSubmit" class="btn btn-info"
-															value="글수정">
-														</a>
-														<input type="button" id="deleteBtn" class="btn btn-dark"
-															value="글삭제">
-													</c:if>
-													<a href="<c:url value="/study/studyList"/>">
-													<input type="button" class="btn btn-secondary" value="돌아가기"></a>
-												</div>
-											</div>
-											<div class="form-group row">
-												<div id="deleteResult"></div>
-											</div>
 										</div>
 									</div>
 								</div>
 							</div>
 						</div>
+
 					</div>
 				</div>
 			</div>

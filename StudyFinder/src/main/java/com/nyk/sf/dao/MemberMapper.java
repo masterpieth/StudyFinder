@@ -7,4 +7,6 @@ public interface MemberMapper {
 	public int signup(MemberVO vo);
 	public MemberVO login(MemberVO vo);
 	public MemberVO searchMember(String userid);
+	public void updateMember(MemberVO vo);
+	public void updatePic(MemberVO vo);
 }

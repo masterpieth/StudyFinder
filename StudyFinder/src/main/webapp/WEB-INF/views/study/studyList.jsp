@@ -20,11 +20,118 @@
 <link
 	href="${pageContext.request.contextPath}/resources/dist/css/style.min.css"
 	rel="stylesheet">
-<title>Insert title here</title>
+<title>스터디 목록</title>
+<script src="/sf/resources/js/jquery-3.4.1.js"></script>
 <script>
+	$(function() {
+		$('#searchBtn').on('click', function() {
+			searchItem();
+		});
+	});
+
+	function searchItem() {
+		var item = $('#searchItem').val();
+		var keyword = $('#searchKeyword').val();
+
+		keyword = convertKeyword(keyword);
+		$.ajax({
+			url : "studyListOut",
+			type : "get",
+			data : {
+				"searchItem" : item,
+				"searchKeyword" : keyword
+			},
+			success : function(data) {
+				console.log(data);
+				output(data);
+				$('#searchKeyword').val("");
+			},
+			error : function() {
+			}
+		});
+	}
+
+	function output(data) {
+		var str = '';
+		$.each(data, function(index, item) {
+			str += '<tr>';
+			str += '<td>' + item.study_no + '</td>';
+
+			if (item.loc_no == 1) {
+				str += '<td>서울</td>';
+			} else if (item.loc_no == 2) {
+				str += '<td>경기</td>';
+			} else if (item.loc_no == 3) {
+				str += '<td>경상</td>';
+			} else if (item.loc_no == 4) {
+				str += '<td>전라</td>';
+			} else if (item.loc_no == 5) {
+				str += '<td>제주</td>';
+			}
+			if (item.field_no == 1) {
+				str += '<td>자격증</td>';
+			} else if (item.field_no == 2) {
+				str += '<td>고시</td>';
+			} else if (item.field_no == 3) {
+				str += '<td>출석</td>';
+			} else if (item.field_no == 4) {
+				str += '<td>취업</td>';
+			} else if (item.field_no == 5) {
+				str += '<td>기타</td>';
+			}
+			if (item.study_level == 1) {
+				str += '<td>초급</td>';
+			} else if (item.study_level == 2) {
+				str += '<td>중급</td>';
+			} else if (item.study_level == 3) {
+				str += '<td>고급</td>';
+			} else if (item.study_level == 0) {
+				str += '<td>해당없음</td>';
+			}
+
+			str += '<td><a href="<c:url value="/study/studyInfo?study_no='
+					+ item.study_no + '"/>">' + item.study_title + '</a></td>';
+			str += '<td>' + item.study_hit + '</td>';
+			str += '<td>' + item.study_inputdate + '</td></tr>';
+		});
+		$('#tbody').html(str);
+	}
+	function convertKeyword(keyword) {
+		if (keyword == '서울') {
+			return 1;
+		} else if (keyword == '경기') {
+			return 2;
+		} else if (keyword == '경상') {
+			return 3;
+		} else if (keyword == '전라') {
+			return 4;
+		} else if (keyword == '제주') {
+			return 5;
+		} else if (keyword == '자격증') {
+			return 1;
+		} else if (keyword == '고시') {
+			return 2;
+		} else if (keyword == '출석') {
+			return 3;
+		} else if (keyword == '취업') {
+			return 4;
+		} else if (keyword == '기타') {
+			return 5;
+		} else if (keyword == '초급') {
+			return 1;
+		} else if (keyword == '중급') {
+			return 2;
+		} else if (keyword == '고급') {
+			return 3;
+		} else if (keyword == '해당없음') {
+			return 0;
+		} else {
+			return keyword;
+		}
+	}
 	function goWrite() {
 		location.href = '<c:url value="/study/createStudy"/>';
-	};
+	}
 </script>
 </head>
 <body>
@@ -62,41 +169,33 @@
 							class="nav-link sidebartoggler waves-effect waves-light"
 							href="javascript:void(0)" data-sidebartype="mini-sidebar"><i
 								class="mdi mdi-menu font-24"></i></a></li>
-						<li class="nav-item search-box"><a
-							class="nav-link waves-effect waves-dark"
-							href="javascript:void(0)"><i class="ti-search"></i></a>
-							<form class="app-search position-absolute">
-								<input type="text" class="form-control"
-									placeholder="Search &amp; enter"> <a class="srh-btn"><i
-									class="ti-close"></i></a>
-							</form></li>
 					</ul>
 					<ul class="navbar-nav float-right">
 						<c:choose>
 							<c:when test="${sessionScope.userid != null}">
 								<li class="nav-item dropdown"><a
-									class="nav-link dropdown-toggle waves-effect waves-dark"
-									href="" data-toggle="dropdown" aria-haspopup="true"
-									aria-expanded="false"> <i class="mdi mdi-bell font-24"></i>
-								</a>
-									<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-										<a class="dropdown-item" href="#">Action</a> <a
-											class="dropdown-item" href="#">Another action</a>
-										<div class="dropdown-divider"></div>
-										<a class="dropdown-item" href="#">Something else here</a>
-									</div></li>
-								<li class="nav-item dropdown"><a
 									class="nav-link dropdown-toggle text-muted waves-effect waves-dark pro-pic"
 									href="" data-toggle="dropdown" aria-haspopup="true"
-									aria-expanded="false"><img
-										src="/sf/resources/assets/images/users/1.jpg" alt="user"
-										class="rounded-circle" width="31"></a>
+									aria-expanded="false"><c:choose>
+											<c:when
+												test="${sessionScope.member.user_savedFileName != null }">
+												<img
+													src="/sf/resources/imgUpload/${member.user_savedFileName}"
+													alt="user" class="rounded-circle" width="31">
+											</c:when>
+											<c:when
+												test="${sessionScope.member.user_savedFileName == null }">
+												<img src="/sf/resources/assets/images/users/1.jpg"
+													alt="user" class="rounded-circle" width="31">
+											</c:when>
+										</c:choose></a>
 									<div class="dropdown-menu dropdown-menu-right user-dd animated">
 										<a class="dropdown-item" href="javascript:void(0)"><i
-											class="ti-user m-r-5 m-l-5"></i> 마이페이지</a>
+											class="ti-user m-r-5 m-l-5"></i> ${sessionScope.userid} 님</a>
 										<div class="dropdown-divider"></div>
-										<a class="dropdown-item" href="javascript:void(0)"><i
-											class="ti-settings m-r-5 m-l-5"></i> 회원정보 수정</a>
+										<a class="dropdown-item"
+											href="<c:url value="/member/myPage"/>"><i
+											class="ti-user m-r-5 m-l-5"></i> 마이페이지</a>
 										<div class="dropdown-divider"></div>
 										<a class="dropdown-item"
 											href="<c:url value="/member/logout"/>"> <i
@@ -138,18 +237,21 @@
 				<nav class="sidebar-nav">
 					<ul id="sidebarnav" class="p-t-30">
 						<li class="sidebar-item"><a
-							class="sidebar-link has-arrow waves-effect waves-dark"
+							class="sidebar-link waves-effect waves-dark sidebar-link"
 							href="<c:url value="/study/studyList"/>" aria-expanded="false">
 								<i class="m-r-10 mdi mdi-human-greeting"></i><span
 								class="hide-menu"> 스터디 찾기 </span>
 						</a>
-							<ul aria-expanded="false" class="collapse  first-level">
-							</ul></li>
 						<li class="sidebar-item"><a
 							class="sidebar-link waves-effect waves-dark sidebar-link"
-							href="charts.html" aria-expanded="false"><i
+							href="<c:url value="/study/myStudy"/>" aria-expanded="false"><i
 								class="m-r-10 mdi mdi-clipboard-check"></i><span
 								class="hide-menu"> 스터디 현황</span></a></li>
+						<li class="sidebar-item"><a
+							class="sidebar-link waves-effect waves-dark sidebar-link"
+							href="<c:url value="/study/createStudy"/>" aria-expanded="false"><i
+								class="m-r-10 mdi mdi-border-color"></i><span class="hide-menu">
+									스터디 만들기</span></a></li>
 						<li class="sidebar-item"><a
 							class="sidebar-link waves-effect waves-dark sidebar-link"
 							href="<c:url value="/member/myPage"/>" aria-expanded="false"><i
@@ -175,20 +277,22 @@
 											<div class="form-group">
 												<div class="row mb-3">
 													<div class="col-lg-2">
-														<select class="form-control form-control-line">
-															<option>선택</option>
-															<option>지역</option>
-															<option>분야</option>
-															<option>제목</option>
-															<option>내용</option>
+														<select class="form-control form-control-line"
+															id="searchItem" name="searchItem">
+															<option value="study_title" selected="selected">제목</option>
+															<option value="study_content">내용</option>
+															<option value="loc_no">지역</option>
+															<option value="field_no">분야</option>
 														</select>
 													</div>
 													<div class="col-lg-5">
 														<input type="text" placeholder="검색어 입력"
-															class="form-control">
+															class="form-control" name="searchKeyword"
+															id="searchKeyword">
 													</div>
 													<div class="col-lg-2">
-														<button type="button" class="btn btn-info">검색</button>
+														<input type="button" id="searchBtn" class="btn btn-info"
+															value="검색">
 													</div>
 												</div>
 											</div>
@@ -205,10 +309,10 @@
 															<th style="width: 20%">작성일</th>
 														</tr>
 													</thead>
-													<tbody>
+													<tbody id="tbody">
 														<c:forEach items="${studyList}" var="study">
 															<tr>
-															<td>${study.study_no}</td>
+																<td>${study.study_no}</td>
 																<td><c:choose>
 																		<c:when test="${study.loc_no == 1}">서울</c:when>
 																		<c:when test="${study.loc_no == 2}">경기</c:when>

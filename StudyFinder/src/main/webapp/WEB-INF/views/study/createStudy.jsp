@@ -24,6 +24,72 @@
 <title>글작성</title>
 <script src="/sf/resources/js/jquery-3.4.1.js"></script>
 <script>
+	$(function() {
+		$('#studyForm').submit(function() {
+
+			if ($('#study_title').val() == "") {
+				$('#titleCheckRow').removeAttr('hidden');
+				return false;
+			} else {
+				$('#titleCheckRow').addAttr('hidden', 'hidden');
+			}
+
+			if ($('#loc_no').val() == 0) {
+				$('#locCheckRow').removeAttr('hidden');
+				return false;
+			} else {
+				$('#locCheckRow').addAttr('hidden', 'hidden');
+			}
+
+			if ($('#field_no').val() == 0) {
+				$('#fieldCheckRow').removeAttr('hidden');
+				return false;
+			} else {
+				$('#fieldCheckRow').addAttr('hidden', 'hidden');
+			}
+
+			if ($('#study_headCount').val() == "") {
+				$('#headCheckRow').removeAttr('hidden');
+				return false;
+			} else {
+				$('#headCheckRow').addAttr('hidden', 'hidden');
+			}
+
+			if ($('#study_content').val() == "") {
+				$('#contentCheckRow').removeAttr('hidden');
+				return false;
+			} else {
+				$('#contentCheckRow').addAttr('hidden', 'hidden');
+			}
+
+			if ($('#due_time').val() == "") {
+				$('#dueCheckRow').removeAttr('hidden');
+				return false;
+			} else {
+				$('#dueCheckRow').addAttr('hidden', 'hidden');
+			}
+
+			if ($('#penalty_min').val() == "") {
+				$('#pminCheckRow').removeAttr('hidden');
+				return false;
+			} else {
+				$('#pminCheckRow').addAttr('hidden', 'hidden');
+			}
+			if ($('#penalty_money').val() == "") {
+				$('#pmoneyCheckRow').removeAttr('hidden');
+				return false;
+			} else {
+				$('#pmoneyCheckRow').addAttr('hidden', 'hidden');
+			}
+			if ($('#limit_time').val() == "") {
+				$('#limitCheckRow').removeAttr('hidden');
+				return false;
+			} else {
+				$('#limitCheckRow').addAttr('hidden', 'hidden');
+			}
+		});
+	});
+
 	function inputTimeColon(time) {
 
 		var replaceTime = time.value.replace(/\:/g, "");
@@ -90,37 +156,32 @@
 							class="nav-link sidebartoggler waves-effect waves-light"
 							href="javascript:void(0)" data-sidebartype="mini-sidebar"><i
 								class="mdi mdi-menu font-24"></i></a></li>
-						<li class="nav-item search-box"><a
-							class="nav-link waves-effect waves-dark"
-							href="javascript:void(0)"><i class="ti-search"></i></a>
-							<form class="app-search position-absolute">
-								<input type="text" class="form-control"
-									placeholder="Search &amp; enter"> <a class="srh-btn"><i
-									class="ti-close"></i></a>
-							</form></li>
 					</ul>
 					<ul class="navbar-nav float-right">
 						<c:choose>
 							<c:when test="${sessionScope.userid != null}">
 								<li class="nav-item dropdown"><a
-									class="nav-link dropdown-toggle waves-effect waves-dark"
-									href="" data-toggle="dropdown" aria-haspopup="true"
-									aria-expanded="false"> <i class="mdi mdi-bell font-24"></i>
-								</a>
-									<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-										<a class="dropdown-item" href="#">Action</a> <a
-											class="dropdown-item" href="#">Another action</a>
-										<div class="dropdown-divider"></div>
-										<a class="dropdown-item" href="#">Something else here</a>
-									</div></li>
-								<li class="nav-item dropdown"><a
 									class="nav-link dropdown-toggle text-muted waves-effect waves-dark pro-pic"
 									href="" data-toggle="dropdown" aria-haspopup="true"
-									aria-expanded="false"><img
-										src="/sf/resources/assets/images/users/1.jpg" alt="user"
-										class="rounded-circle" width="31"></a>
+									aria-expanded="false"><c:choose>
+											<c:when
+												test="${sessionScope.member.user_savedFileName != null }">
+												<img
+													src="/sf/resources/imgUpload/${member.user_savedFileName}"
+													alt="user" class="rounded-circle" width="31">
+											</c:when>
+											<c:when
+												test="${sessionScope.member.user_savedFileName == null }">
+												<img src="/sf/resources/assets/images/users/1.jpg"
+													alt="user" class="rounded-circle" width="31">
+											</c:when>
+										</c:choose></a>
 									<div class="dropdown-menu dropdown-menu-right user-dd animated">
 										<a class="dropdown-item" href="javascript:void(0)"><i
+											class="ti-user m-r-5 m-l-5"></i> ${sessionScope.userid} 님</a>
+										<div class="dropdown-divider"></div>
+										<a class="dropdown-item"
+											href="<c:url value="/member/myPage"/>"><i
 											class="ti-user m-r-5 m-l-5"></i> 마이페이지</a>
 										<div class="dropdown-divider"></div>
 										<a class="dropdown-item"
@@ -157,18 +218,21 @@
 				<nav class="sidebar-nav">
 					<ul id="sidebarnav" class="p-t-30">
 						<li class="sidebar-item"><a
-							class="sidebar-link has-arrow waves-effect waves-dark"
-							href="<c:url value="/board/boardList"/>" aria-expanded="false">
+							class="sidebar-link waves-effect waves-dark sidebar-link"
+							href="<c:url value="/study/studyList"/>" aria-expanded="false">
 								<i class="m-r-10 mdi mdi-human-greeting"></i><span
 								class="hide-menu"> 스터디 찾기 </span>
 						</a>
-							<ul aria-expanded="false" class="collapse  first-level">
-							</ul></li>
 						<li class="sidebar-item"><a
 							class="sidebar-link waves-effect waves-dark sidebar-link"
-							href="charts.html" aria-expanded="false"><i
+							href="<c:url value="/study/myStudy"/>" aria-expanded="false"><i
 								class="m-r-10 mdi mdi-clipboard-check"></i><span
 								class="hide-menu"> 스터디 현황</span></a></li>
+						<li class="sidebar-item"><a
+							class="sidebar-link waves-effect waves-dark sidebar-link"
+							href="<c:url value="/study/createStudy"/>" aria-expanded="false"><i
+								class="m-r-10 mdi mdi-border-color"></i><span class="hide-menu">
+									스터디 만들기</span></a></li>
 						<li class="sidebar-item"><a
 							class="sidebar-link waves-effect waves-dark sidebar-link"
 							href="<c:url value="/member/myPage"/>" aria-expanded="false"><i
@@ -199,8 +263,13 @@
 														이름</label>
 													<div class="col-sm-10">
 														<input type="text" class="form-control form-control-line"
-															name="study_title" placeholder="스터디명 입력">
+															name="study_title" id="study_title" placeholder="스터디명 입력">
 													</div>
+												</div>
+												<div class="form-group row" id="titleCheckRow"
+													hidden="hidden">
+													<div class="col-sm-10" id="titleCheckDiv">스터디 이름을
+														입력해주세요.</div>
 												</div>
 												<div class="form-group row">
 													<label
@@ -213,21 +282,11 @@
 												</div>
 												<div class="form-group row">
 													<label
-														class="col-sm-2 text-center control-label col-form-label">참여인원</label>
-													<div class="col-sm-10">
-														<input type="number"
-															class="form-control form-control-line"
-															name="study_headCount" max="10" min="2"
-															placeholder="최소인원 2명, 최대인원 10명">
-													</div>
-												</div>
-												<div class="form-group row">
-													<label
 														class="col-sm-2 text-center control-label col-form-label">지역</label>
 													<div class="col-sm-10">
-														<select name="loc_no"
+														<select name="loc_no" id="loc_no"
 															class="form-control form-control-line">
-															<option selected="selected">선택</option>
+															<option value="0" selected="selected">선택</option>
 															<option value="1">서울</option>
 															<option value="2">경기</option>
 															<option value="3">대전</option>
@@ -236,19 +295,27 @@
 														</select>
 													</div>
 												</div>
+												<div class="form-group row" id="locCheckRow" hidden="hidden">
+													<div class="col-sm-10" id="locCheckDiv">지역을 선택해주세요.</div>
+												</div>
 												<div class="form-group row">
 													<label
 														class="col-sm-2 text-center control-label col-form-label">분야</label>
 													<div class="col-sm-10">
-														<select name="field_no"
+														<select name="field_no" id="field_no"
 															class="form-control form-control-line">
-															<option selected="selected">선택</option>
+															<option value="0" selected="selected">선택</option>
 															<option value="1">자격증</option>
 															<option value="2">고시</option>
 															<option value="3">출석</option>
 															<option value="4">취업</option>
 															<option value="5">기타</option>
 														</select>
+													</div>
+												</div>
+												<div class="form-group row" id="fieldCheckRow"
+													hidden="hidden">
+													<div class="col-sm-10" id="fieldCheckDiv">분야를 선택해주세요.
 													</div>
 												</div>
 												<div class="form-group row">
@@ -258,7 +325,8 @@
 														<div class="custom-control custom-radio">
 															<input type="radio" class="custom-control-input"
 																id="customControlValidation1" name="study_level"
-																value="1"> <label class="custom-control-label"
+																value="1" checked="checked"> <label
+																class="custom-control-label"
 																for="customControlValidation1">초급</label>
 														</div>
 														<div class="custom-control custom-radio">
@@ -285,10 +353,15 @@
 													<label
 														class="col-sm-2 text-center control-label col-form-label">인원수</label>
 													<div class="col-sm-10">
-														<input type="number"
+														<input type="number" id="study_headCount"
 															class="form-control form-control-line"
 															name="study_headCount" placeholder="최소 2명, 최대 10명"
 															min="2" max="10">
+													</div>
+												</div>
+												<div class="form-group row" id="headCheckRow"
+													hidden="hidden">
+													<div class="col-sm-10" id="headCheckDiv">인원수를 선택해주세요.
 													</div>
 												</div>
 												<div class="form-group row">
@@ -297,44 +370,70 @@
 														규칙</label>
 													<div class="col-sm-10">
 														<textarea rows="3" cols="40" class="form-control"
-															name="study_content" style="resize: none;"></textarea>
+															id="study_content" name="study_content"
+															style="resize: none;"></textarea>
 													</div>
+												</div>
+												<div class="form-group row" id="contentCheckRow"
+													hidden="hidden">
+													<div class="col-sm-10" id="contentCheckDiv">스터디 규칙을
+														작성해주세요.</div>
 												</div>
 												<div class="form-group row">
 													<label
 														class="col-sm-2 text-center control-label col-form-label">체크시간</label>
 													<div class="col-sm-10">
 														<input type="text" class="form-control form-control-line"
-															name="due_time" onKeyup="inputTimeColon(this);"
+															id="due_time" name="due_time"
+															onKeyup="inputTimeColon(this);"
 															placeholder="인증 제출시간 입력: HH:MM까지 인증" maxlength="5">
+													</div>
+												</div>
+												<div class="form-group row" id="dueCheckRow" hidden="hidden">
+													<div class="col-sm-10" id="dueCheckDiv">체크시간을 입력해주세요.
 													</div>
 												</div>
 												<div class="form-group row">
 													<label
 														class="col-sm-2 text-center control-label col-form-label">벌금기준</label>
 													<div class="col-sm-10">
-														<input type="number"
+														<input type="number" id="penalty_min"
 															class="form-control form-control-line" name="penalty_min"
 															placeholder="벌금 기준 시간 입력: MM분마다" min="0" max="60">
 													</div>
+												</div>
+												<div class="form-group row" id="pminCheckRow"
+													hidden="hidden">
+													<div class="col-sm-10" id="pminCheckDiv">벌금 기준 시간을
+														입력해주세요.</div>
 												</div>
 												<div class="form-group row">
 													<label
 														class="col-sm-2 text-center control-label col-form-label">벌금</label>
 													<div class="col-sm-10">
 														<input type="number"
-															class="form-control form-control-line"
+															class="form-control form-control-line" id="penalty_money"
 															name="penalty_money" placeholder="벌금입력" min="0">
 													</div>
+												</div>
+												<div class="form-group row" id="pmoneyCheckRow"
+													hidden="hidden">
+													<div class="col-sm-10" id="pmoneyCheckDiv"></div>
 												</div>
 												<div class="form-group row">
 													<label
 														class="col-sm-2 text-center control-label col-form-label">결석기준</label>
 													<div class="col-sm-10">
 														<input type="text" class="form-control form-control-line"
-															name="limit_time" onKeyup="inputTimeColon(this);"
+															id="limit_time" name="limit_time"
+															onKeyup="inputTimeColon(this);"
 															placeholder="결석 기준 시간 입력: HH:MM이후 결석" maxlength="5">
 													</div>
+												</div>
+												<div class="form-group row" id="limitCheckRow"
+													hidden="hidden">
+													<div class="col-sm-10" id="limitCheckDiv">결석 기준 시간을
+														입력해주세요.</div>
 												</div>
 												<hr>
 												<div class="form-group row">
@@ -355,6 +454,7 @@
 			</div>
 		</div>
 		<footer class="footer text-center"> CopyRight. </footer>
+
 	</div>
 	<script src="/sf/resources/assets/libs/jquery/dist/jquery.min.js"></script>
 	<script src="/sf/resources/dist/js/jquery.ui.touch-punch-improved.js"></script>

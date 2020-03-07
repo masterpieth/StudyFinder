@@ -23,12 +23,35 @@
 		select *
 		from sf_member
 		where userid=#{userid}
-		and userpwd = #{userpwd}
+		and userpwd =
+		#{userpwd}
 	</select>
-	<select id="searchMember" parameterType="String"
+	<select id="searchMember" parameterType="string"
 		resultType="memberVO">
 		select *
 		from sf_member
 		where userid=#{userid}
 	</select>
+	<update id="updateMember" parameterType="memberVO">
+		update sf_member
+		set
+		userpwd = #{userpwd},
+		field_no = #{field_no},
+		loc_no = #{loc_no}
+		where
+		userid = #{userid}
+	</update>
+	<update id="updatePic" parameterType="memberVO">
+		update sf_member
+		set
+		img = #{img}
+		<choose>
+			<when test="user_originalFileName != null and user_savedFileName != null">
+				, user_originalFileName =  #{user_originalFileName}
+				, user_savedFileName = #{user_savedFileName}
+			</when>
+		</choose>
+		where
+		userid = #{userid}
+	</update>
 </mapper>

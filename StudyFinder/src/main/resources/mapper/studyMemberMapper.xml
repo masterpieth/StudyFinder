@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nyk.sf.dao.StudyMemberMapper">
+	<insert id="insertStudyMember" parameterType="studyMemberVO">
+		insert into
+		sf_studymember(
+		study_no,
+		auth_userid,
+		part_userid
+		) values(
+		#{study_no},
+		#{auth_userid},
+		#{part_userid}
+		)
+	</insert>
+	<select id="studyMemberList" parameterType="int"
+		resultType="studyMemberVO">
+		select * from sf_studymember
+		where study_no = #{study_no}
+	</select>
+	<select id="searchStudyMember" parameterType="studyMemberVO"
+		resultType="studyMemberVO">
+		select * from sf_studymember
+		where study_no = #{study_no} and part_userid = #{part_userid}
+	</select>
+</mapper>

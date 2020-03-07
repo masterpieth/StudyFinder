@@ -20,7 +20,7 @@
 <link
 	href="${pageContext.request.contextPath}/resources/dist/css/style.min.css"
 	rel="stylesheet">
-<title>스터디 조회</title>
+<title>참여중인 스터디</title>
 </head>
 <body>
 	<div class="preloader">
@@ -81,8 +81,7 @@
 										<a class="dropdown-item" href="javascript:void(0)"><i
 											class="ti-user m-r-5 m-l-5"></i> ${sessionScope.userid} 님</a>
 										<div class="dropdown-divider"></div>
-										<a class="dropdown-item"
-											href="<c:url value="/member/myPage"/>"><i
+										<a class="dropdown-item" href="<c:url value="/member/myPage"/>"><i
 											class="ti-user m-r-5 m-l-5"></i> 마이페이지</a>
 										<div class="dropdown-divider"></div>
 										<a class="dropdown-item"
@@ -112,6 +111,12 @@
 				</div>
 			</nav>
 		</header>
+		<!-- ============================================================== -->
+		<!-- End Topbar header -->
+		<!-- ============================================================== -->
+		<!-- ============================================================== -->
+		<!-- Left Sidebar - style you can find in sidebar.scss  -->
+		<!-- ============================================================== -->
 		<aside class="left-sidebar" data-sidebarbg="skin5">
 			<!-- Sidebar scroll-->
 			<div class="scroll-sidebar">
@@ -148,7 +153,7 @@
 				<div class="row">
 					<div class="col-md-12 align-self-center">
 						<div class="card-body" style="background: white;">
-							<h3 class="text-themecolor">스터디 현황</h3>
+							<h3 class="text-themecolor">참여중인 스터디</h3>
 							<hr>
 						</div>
 					</div>
@@ -173,9 +178,7 @@
 								</c:choose>
 							</div>
 							<div class="card-body" style="text-align: center;">
-								<h4 class="card-title m-t-10">[ID]: ${sessionScope.userid}</h4>
-								<h6 class="card-subtitle"></h6>
-								<br>
+								<h4 class="card-title m-t-10">[ID]:${sessionScope.userid}</h4>
 							</div>
 						</div>
 					</div>
@@ -184,197 +187,35 @@
 						<div class="card">
 							<!-- Tab panes -->
 							<div class="card-body">
-								<div class="card-body">
-									<h4 class="card-title m-t-10">스터디 정보 조회</h4>
-									<hr>
-								</div>
-								<div class="form-group">
-									<c:if test="${requestScope.study == null}">
-										<div class="col-sm-12"
-											style="height: 400px; text-align: center; padding-top: 30%;">
-											<h2 class="card-title">참여중인 스터디가 없습니다.</h2>
-										</div>
-									</c:if>
-									<c:if test="${requestScope.study != null}">
-										<form class="form-horizontal form-material">
-											<div class="form-group row">
-												<label
-													class="col-sm-2 text-center control-label col-form-label">스터디
-													이름</label>
-												<div class="col-sm-10">
-													<input type="text" class="form-control form-control-line"
-														value="${study.study_title}" readonly="readonly">
-												</div>
-											</div>
-											<div class="form-group row">
-												<label
-													class="col-sm-2 text-center control-label col-form-label">관리자</label>
-												<div class="col-sm-10">
-													<input type="text" class="form-control form-control-line"
-														value="${study.auth_userid}" readonly="readonly">
-												</div>
-											</div>
-											<div class="form-group row">
-												<label
-													class="col-sm-2 text-center control-label col-form-label">지역
-												</label>
-												<div class="col-sm-10">
-													<c:choose>
-														<c:when test="${study.loc_no == 1}">
-															<input type="text" class="form-control form-control-line"
-																value="서울" readonly="readonly">
-														</c:when>
-														<c:when test="${study.loc_no == 2}">
-															<input type="text" class="form-control form-control-line"
-																value="경기" readonly="readonly">
-														</c:when>
-														<c:when test="${study.loc_no == 3}">
-															<input type="text" class="form-control form-control-line"
-																value="경상" readonly="readonly">
-														</c:when>
-														<c:when test="${study.loc_no == 4}">
-															<input type="text" class="form-control form-control-line"
-																value="전라" readonly="readonly">
-														</c:when>
-														<c:when test="${study.loc_no == 5}">
-															<input type="text" class="form-control form-control-line"
-																value="제주" readonly="readonly">
-														</c:when>
-													</c:choose>
-												</div>
-											</div>
-											<div class="form-group row">
-												<label
-													class="col-sm-2 text-center control-label col-form-label">분야
-												</label>
-												<div class="col-sm-10">
-													<c:choose>
-														<c:when test="${study.field_no == 1}">
-															<input type="text" class="form-control form-control-line"
-																name="auth_userid" id="userid" value="자격증"
-																readonly="readonly">
-														</c:when>
-														<c:when test="${study.field_no == 2}">
-															<input type="text" class="form-control form-control-line"
-																name="auth_userid" id="userid" value="고시"
-																readonly="readonly">
-														</c:when>
-														<c:when test="${study.field_no == 3}">
-															<input type="text" class="form-control form-control-line"
-																name="auth_userid" id="userid" value="출석"
-																readonly="readonly">
-														</c:when>
-														<c:when test="${study.field_no == 4}">
-															<input type="text" class="form-control form-control-line"
-																name="auth_userid" id="userid" value="취업"
-																readonly="readonly">
-														</c:when>
-														<c:when test="${study.field_no == 5}">
-															<input type="text" class="form-control form-control-line"
-																name="auth_userid" id="userid" value="기타"
-																readonly="readonly">
-														</c:when>
-													</c:choose>
-												</div>
-											</div>
-											<div class="form-group row">
-												<label
-													class="col-sm-2 text-center control-label col-form-label">레벨
-												</label>
-												<div class="col-sm-10">
-													<c:choose>
-														<c:when test="${study.study_level == 1}">
-															<input type="text" class="form-control form-control-line"
-																name="auth_userid" id="userid" value="초급"
-																readonly="readonly">
-														</c:when>
-														<c:when test="${study.study_level == 2}">
-															<input type="text" class="form-control form-control-line"
-																name="auth_userid" id="userid" value="중급"
-																readonly="readonly">
-														</c:when>
-														<c:when test="${study.study_level == 3}">
-															<input type="text" class="form-control form-control-line"
-																name="auth_userid" id="userid" value="고급"
-																readonly="readonly">
-														</c:when>
-														<c:when test="${study.study_level == 0}">
-															<input type="text" class="form-control form-control-line"
-																name="auth_userid" id="userid" value="해당없음"
-																readonly="readonly">
-														</c:when>
-													</c:choose>
-												</div>
-											</div>
-										</form>
-										<div class="card-body">
-											<h4 class="card-title m-t-10">참여중인 인원</h4>
-											<hr>
-											<div class="form-group row">
-												<div class="col-sm-3">
-													<img src="/sf/resources/assets/images/users/1.jpg"
-														alt="user" class="rounded-circle" width="50">
-												</div>
-												<div class="col-sm-3">
-													<img src="/sf/resources/assets/images/users/1.jpg"
-														alt="user" class="rounded-circle" width="50">
-												</div>
-												<div class="col-sm-3">
-													<img src="/sf/resources/assets/images/users/1.jpg"
-														alt="user" class="rounded-circle" width="50">
-												</div>
-												<div class="col-sm-3">
-													<img src="/sf/resources/assets/images/users/1.jpg"
-														alt="user" class="rounded-circle" width="50">
-												</div>
-											</div>
-										</div>
-										<div class="card-body"></div>
-										<div class="card-body">
-											<h4 class="card-title m-t-10">인증하기</h4>
-											<hr>
-											<div class="form-group row">
-												<label
-													class="col-sm-2 text-center control-label col-form-label">현재
-													벌금 </label>
-												<div class="col-sm-3">
-													<input type="text" value="벌금자리"
-														class="form-control form-control-line">
-												</div>
-												<label
-													class="col-sm-2 text-center control-label col-form-label">
-													내 벌금 </label>
-												<div class="col-sm-3">
-													<input type="text" value="내 벌금 자리"
-														class="form-control form-control-line">
-												</div>
-											</div>
-										</div>
-										<div class="row border-top border-secondary">
-											<div class="col-12">
-												<div class="form-group">
-													<div class="p-t-20">
-														<input type="button" class="btn btn-block btn-lg btn-info"
-															value="인증하기">
-													</div>
-												</div>
-											</div>
-										</div>
-									</c:if>
-
-								</div>
-								<div class="form-group">
-									<div class="col-sm-12" style="text-align: right;">
-										<a href="<c:url value="/"/>"><input type="button" class="btn btn-secondary" value="돌아가기"></a>
-									</div>
-								</div>
+								<h4 class="card-title m-t-10">참여중인 스터디 목록</h4>
+								<hr>
+								<table class="table">
+									<thead>
+										<tr>
+											<th style="width: 20%">스터디 번호</th>
+											<th>스터디 이름</th>
+										</tr>
+									</thead>
+									<tbody>
+										<c:forEach items="${myStudyList}" var="study">
+											<tr>
+												<td>${study.study_no}</td>
+												<td><a
+													href="<c:url value="/study/seeMyStudy?study_no=${study.study_no}"/>">${study.study_title}
+												</a></td>
+											</tr>
+										</c:forEach>
+									</tbody>
+								</table>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		<footer class="footer text-center"> CopyRight. </footer>
+		<div class="form-group">
+			<footer class="footer text-center"> CopyRight. </footer>
+		</div>
 	</div>
 	<!-- All Jquery -->
 	<!-- ============================================================== -->
@@ -398,5 +239,8 @@
 	<script src="/sf/resources/dist/js/custom.min.js"></script>
 	<!-- this page js -->
 	<script src="/sf/resources/assets/libs/moment/min/moment.min.js"></script>
+	<script
+		src="/sf/resources/assets/libs/fullcalendar/dist/fullcalendar.min.js"></script>
+	<script src="/sf/resources/dist/js/pages/calendar/cal-init.js"></script>
 </body>
 </html>

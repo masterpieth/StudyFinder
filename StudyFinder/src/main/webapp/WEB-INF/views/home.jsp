@@ -29,6 +29,12 @@
 	function myPage() {
 		location.href = '<c:url value="/member/myPage"/>';
 	};
+	function myStudy() {
+		location.href = '<c:url value="/study/myStudy"/>';
+	};
+	function createStudy() {
+		location.href = '<c:url value="/study/createStudy"/>';
+	};
 </script>
 </head>
 <body>
@@ -92,17 +98,6 @@
 							class="nav-link sidebartoggler waves-effect waves-light"
 							href="javascript:void(0)" data-sidebartype="mini-sidebar"><i
 								class="mdi mdi-menu font-24"></i></a></li>
-						<!-- ============================================================== -->
-						<!-- Search -->
-						<!-- ============================================================== -->
-						<li class="nav-item search-box"><a
-							class="nav-link waves-effect waves-dark"
-							href="javascript:void(0)"><i class="ti-search"></i></a>
-							<form class="app-search position-absolute">
-								<input type="text" class="form-control"
-									placeholder="Search &amp; enter"> <a class="srh-btn"><i
-									class="ti-close"></i></a>
-							</form></li>
 					</ul>
 					<!-- ============================================================== -->
 					<!-- Right side toggle and nav items -->
@@ -111,24 +106,27 @@
 						<c:choose>
 							<c:when test="${sessionScope.userid != null}">
 								<li class="nav-item dropdown"><a
-									class="nav-link dropdown-toggle waves-effect waves-dark"
-									href="" data-toggle="dropdown" aria-haspopup="true"
-									aria-expanded="false"> <i class="mdi mdi-bell font-24"></i>
-								</a>
-									<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-										<a class="dropdown-item" href="#">Action</a> <a
-											class="dropdown-item" href="#">Another action</a>
-										<div class="dropdown-divider"></div>
-										<a class="dropdown-item" href="#">Something else here</a>
-									</div></li>
-								<li class="nav-item dropdown"><a
 									class="nav-link dropdown-toggle text-muted waves-effect waves-dark pro-pic"
 									href="" data-toggle="dropdown" aria-haspopup="true"
-									aria-expanded="false"><img
-										src="/sf/resources/assets/images/users/1.jpg" alt="user"
-										class="rounded-circle" width="31"></a>
+									aria-expanded="false"><c:choose>
+											<c:when
+												test="${sessionScope.member.user_savedFileName != null }">
+												<img
+													src="/sf/resources/imgUpload/${member.user_savedFileName}"
+													alt="user" class="rounded-circle" width="31">
+											</c:when>
+											<c:when
+												test="${sessionScope.member.user_savedFileName == null }">
+												<img src="/sf/resources/assets/images/users/1.jpg"
+													alt="user" class="rounded-circle" width="31">
+											</c:when>
+										</c:choose></a>
 									<div class="dropdown-menu dropdown-menu-right user-dd animated">
 										<a class="dropdown-item" href="javascript:void(0)"><i
+											class="ti-user m-r-5 m-l-5"></i> ${sessionScope.userid} 님</a>
+										<div class="dropdown-divider"></div>
+										<a class="dropdown-item"
+											href="<c:url value="/member/myPage"/>"><i
 											class="ti-user m-r-5 m-l-5"></i> 마이페이지</a>
 										<div class="dropdown-divider"></div>
 										<a class="dropdown-item"
@@ -171,7 +169,7 @@
 				<nav class="sidebar-nav">
 					<ul id="sidebarnav" class="p-t-30">
 						<li class="sidebar-item"><a
-							class="sidebar-link has-arrow waves-effect waves-dark"
+							class="sidebar-link waves-effect waves-dark sidebar-link"
 							href="<c:url value="/study/studyList"/>" aria-expanded="false">
 								<i class="m-r-10 mdi mdi-human-greeting"></i><span
 								class="hide-menu"> 스터디 찾기 </span>
@@ -180,9 +178,14 @@
 							</ul></li>
 						<li class="sidebar-item"><a
 							class="sidebar-link waves-effect waves-dark sidebar-link"
-							href="charts.html" aria-expanded="false"><i
+							href="<c:url value="/study/myStudy"/>" aria-expanded="false"><i
 								class="m-r-10 mdi mdi-clipboard-check"></i><span
 								class="hide-menu"> 스터디 현황</span></a></li>
+						<li class="sidebar-item"><a
+							class="sidebar-link waves-effect waves-dark sidebar-link"
+							href="<c:url value="/study/createStudy"/>" aria-expanded="false"><i
+								class="m-r-10 mdi mdi-border-color"></i><span class="hide-menu">
+									스터디 만들기</span></a></li>
 						<li class="sidebar-item"><a
 							class="sidebar-link waves-effect waves-dark sidebar-link"
 							href="<c:url value="/member/myPage"/>" aria-expanded="false"><i
@@ -222,7 +225,7 @@
 					</div>
 					<!-- Column -->
 					<div class="col-md-6 col-lg-3">
-						<div class="card card-hover">
+						<div class="card card-hover" onclick="myStudy()">
 							<div class="box bg-success text-center">
 								<h1 class="font-light text-white">
 									<i class="m-r-10 mdi mdi-clipboard-check"></i>
@@ -231,7 +234,16 @@
 							</div>
 						</div>
 					</div>
-					<div class="col-md-6 col-lg-3"></div>
+					<div class="col-md-6 col-lg-3">
+						<div class="card card-hover" onclick="createStudy()">
+							<div class="box bg-warning text-center">
+								<h1 class="font-light text-white">
+									<i class="mdi mdi-border-color"></i>
+								</h1>
+								<h6 class="text-white">스터디 만들기</h6>
+							</div>
+						</div>
+					</div>
 					<!-- Column -->
 					<div class="col-md-6 col-lg-3">
 						<div class="card card-hover" onclick="myPage()">
@@ -247,16 +259,38 @@
 				<div class="row">
 					<div class="col-lg-6">
 						<div class="card">
-							<div class="card-body">
+							<div class="card-body todo-widget scrollable"
+								style="height: 450px;">
 								<h4 class="card-title">최신 스터디</h4>
 								<div class="card" style="text-align: right;">
 									<a href="<c:url value="/study/studyList"/>">더보기</a>
 								</div>
 								<table class="table">
+									<tr>
+										<th style="width: 20%">지역</th>
+										<th style="width: 20%">분야</th>
+										<th style="width: 45%">제목</th>
+										<th>인원</th>
+									</tr>
 									<c:forEach items="${studyList}" var="study">
 										<tr>
+											<td><c:choose>
+													<c:when test="${study.loc_no == 1}">서울</c:when>
+													<c:when test="${study.loc_no == 2}">경기</c:when>
+													<c:when test="${study.loc_no == 3}">경상</c:when>
+													<c:when test="${study.loc_no == 4}">전라</c:when>
+													<c:when test="${study.loc_no == 5}">제주</c:when>
+												</c:choose></td>
+											<td><c:choose>
+													<c:when test="${study.field_no == 1}">자격증</c:when>
+													<c:when test="${study.field_no == 2}">고시</c:when>
+													<c:when test="${study.field_no == 3}">출석</c:when>
+													<c:when test="${study.field_no == 4}">취업</c:when>
+													<c:when test="${study.field_no == 5}">기타</c:when>
+												</c:choose></td>
 											<td><a
 												href="<c:url value="/study/studyInfo?study_no=${study.study_no}"/>">${study.study_title}</a></td>
+											<td>${study.study_headCount}</td>
 										</tr>
 									</c:forEach>
 								</table>
@@ -265,8 +299,62 @@
 					</div>
 					<div class="col-lg-6">
 						<div class="card">
-							<div class="card-body">
-								<h4 class="card-title">To Do List</h4>
+							<div class="card-body todo-widget scrollable"
+								style="height: 450px;">
+								<h4 class="card-title">개설중인 스터디 목록</h4>
+								<div class="card" style="text-align: right;">
+									<a href="<c:url value="/study/myStudy"/>">더보기</a>
+								</div>
+								<table class="table">
+									<tr>
+										<th style="width: 20%">지역</th>
+										<th style="width: 20%">분야</th>
+										<th style="width: 45%">제목</th>
+										<th>인원</th>
+									</tr>
+									<c:choose>
+										<c:when test="${myStudyList != null}">
+											<c:forEach items="${myStudyList}" var="study">
+												<tr>
+													<td><c:choose>
+															<c:when test="${study.loc_no == 1}">서울</c:when>
+															<c:when test="${study.loc_no == 2}">경기</c:when>
+															<c:when test="${study.loc_no == 3}">경상</c:when>
+															<c:when test="${study.loc_no == 4}">전라</c:when>
+															<c:when test="${study.loc_no == 5}">제주</c:when>
+														</c:choose></td>
+													<td><c:choose>
+															<c:when test="${study.field_no == 1}">자격증</c:when>
+															<c:when test="${study.field_no == 2}">고시</c:when>
+															<c:when test="${study.field_no == 3}">출석</c:when>
+															<c:when test="${study.field_no == 4}">취업</c:when>
+															<c:when test="${study.field_no == 5}">기타</c:when>
+														</c:choose></td>
+													<td><a
+														href="<c:url value="/study/studyInfo?study_no=${study.study_no}"/>">${study.study_title}</a></td>
+													<td>${study.study_headCount}</td>
+												</tr>
+											</c:forEach>
+										</c:when>
+										<c:when test="${myStudyList == null}">
+											<div class="card-body">
+												<h4 class="card-title">개설중인 스터디가 없습니다.</h4>
+											</div>
+										</c:when>
+									</c:choose>
+
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<div class="card">
+							<div class="row">
+								<div class="card-body b-l calender-sidebar">
+									<div id="calendar"></div>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -285,16 +373,7 @@
 			<!-- End footer -->
 			<!-- ============================================================== -->
 		</div>
-		<!-- ============================================================== -->
-		<!-- End Page wrapper  -->
-		<!-- ============================================================== -->
 	</div>
-	<!-- ============================================================== -->
-	<!-- End Wrapper -->
-	<!-- ============================================================== -->
-	<!-- ============================================================== -->
-	<!-- All Jquery -->
-	<!-- ============================================================== -->
 	<script src="resources/assets/libs/jquery/dist/jquery.min.js"></script>
 	<script src="resources/dist/js/jquery.ui.touch-punch-improved.js"></script>
 	<script src="resources/dist/js/jquery-ui.min.js"></script>

@@ -23,4 +23,5 @@ public class StudyVO {
 	private int penalty_min;
 	private int penalty_money;
 	private String limit_time;
+	private int penalty_total;
 }

@@ -41,11 +41,79 @@
 
 	<select id="studyList" resultType="studyVO">
 		select *
-		from sf_study order by study_no desc
+		from sf_study order by
+		study_no desc
 	</select>
 
 	<select id="studyInfo" resultType="studyVO" parameterType="int">
 		select *
 		from sf_study where study_no = #{study_no}
 	</select>
+
+	<select id="searchStudy" resultType="studyVO">
+		select
+		*
+		from
+		sf_study
+		where
+		<choose>
+			<when test="searchItem == 'loc_no'">loc_no</when>
+			<when test="searchItem == 'field_no'">field_no</when>
+			<when test="searchItem == 'study_title'">study_title</when>
+			<when test="searchItem == 'study_content'">study_content</when>
+		</choose>
+		like '%' || #{searchKeyword} || '%'
+		order by
+		study_no desc
+	</select>
+	<update id="updateStudy" parameterType="studyVO">
+		update sf_study
+		set
+		auth_userid = #{auth_userid}
+		,study_title = #{study_title}
+		,loc_no =
+		#{loc_no}
+		,field_no = #{field_no}
+		,study_content = #{study_content}
+		,due_time = #{due_time}
+		,penalty_min = #{penalty_min}
+		,penalty_money =
+		#{penalty_money}
+		,limit_time = #{limit_time}
+		where
+		study_no = #{study_no}
+	</update>
+	<select id="myStudyList" resultType="studyVO"
+		parameterType="string">
+		select * from sf_study
+		where
+		auth_userid = #{userid}
+		order
+		by study_no desc
+	</select>
+	<select id="seeMyStudy" resultType="studyVO"
+		parameterType="string">
+		select
+		s.STUDY_NO,
+		s.Auth_USERID,
+		s.STUDY_TITLE,
+		s.STUDY_CONTENT,
+		s.FIELD_NO,
+		s.LOC_NO,
+		s.STUDY_LEVEL,
+		s.STUDY_HEADCOUNT,
+		s.STUDY_INPUTDATE,
+		s.study_hit,
+		s.DUE_TIME,
+		s.PENALTY_MIN,
+		s.PENALTY_MONEY,
+		s.LIMIT_TIME,
+		s.PENALTY_TOTAL
+		from sf_study s, sf_studymember sm
+		where s.study_no = sm.study_no and sm.part_userid = #{part_userid}
+	</select>
+	<delete id="deleteStudy" parameterType="int">
+		delete from sf_study
+		where study_no = #{study_no}
+	</delete>
 </mapper>

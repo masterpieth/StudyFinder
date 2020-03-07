@@ -7,16 +7,15 @@
 		<setting name="jdbcTypeForNull" value="NULL" />
 	</settings>
 	<typeAliases>
-		<typeAlias type="com.nyk.sf.vo.BoardVO" alias="boardVO"/>
-		<typeAlias type="com.nyk.sf.vo.CertiVO" alias="certiVO"/>
 		<typeAlias type="com.nyk.sf.vo.MemberVO" alias="memberVO"/>
 		<typeAlias type="com.nyk.sf.vo.StudyVO" alias="studyVO"/>
-		<typeAlias type="com.nyk.sf.vo.WakeupVO" alias="wakeupVO"/>
-		
+		<typeAlias type="com.nyk.sf.vo.ReplyVO" alias="replyVO"/>
+		<typeAlias type="com.nyk.sf.vo.StudyMemberVO" alias="studyMemberVO"/>
 	</typeAliases>
 	<mappers>
 	<mapper resource="mapper/memberMapper.xml" />
-	<mapper resource="mapper/boardMapper.xml" />
 	<mapper resource="mapper/studyMapper.xml" />
+	<mapper resource="mapper/replyMapper.xml" />
+	<mapper resource="mapper/studyMemberMapper.xml" />
 	</mappers>
 </configuration>
