@@ -81,7 +81,8 @@
 										<a class="dropdown-item" href="javascript:void(0)"><i
 											class="ti-user m-r-5 m-l-5"></i> ${sessionScope.userid} 님</a>
 										<div class="dropdown-divider"></div>
-										<a class="dropdown-item" href="<c:url value="/member/myPage"/>"><i
+										<a class="dropdown-item"
+											href="<c:url value="/member/myPage"/>"><i
 											class="ti-user m-r-5 m-l-5"></i> 마이페이지</a>
 										<div class="dropdown-divider"></div>
 										<a class="dropdown-item"
@@ -187,25 +188,77 @@
 						<div class="card">
 							<!-- Tab panes -->
 							<div class="card-body">
+								<h4 class="card-title m-t-10">개설중인 스터디 목록</h4>
+								<hr>
+								<table class="table">
+									<tr>
+										<th style="width: 20%">지역</th>
+										<th style="width: 20%">분야</th>
+										<th style="width: 45%">제목</th>
+										<th>인원</th>
+									</tr>
+									<c:choose>
+										<c:when test="${myStudyList != null}">
+											<c:forEach items="${myStudyList}" var="study">
+												<tr>
+													<td><c:choose>
+															<c:when test="${study.loc_no == 1}">서울</c:when>
+															<c:when test="${study.loc_no == 2}">경기</c:when>
+															<c:when test="${study.loc_no == 3}">경상</c:when>
+															<c:when test="${study.loc_no == 4}">전라</c:when>
+															<c:when test="${study.loc_no == 5}">제주</c:when>
+														</c:choose></td>
+													<td><c:choose>
+															<c:when test="${study.field_no == 1}">자격증</c:when>
+															<c:when test="${study.field_no == 2}">고시</c:when>
+															<c:when test="${study.field_no == 3}">출석</c:when>
+															<c:when test="${study.field_no == 4}">취업</c:when>
+															<c:when test="${study.field_no == 5}">기타</c:when>
+														</c:choose></td>
+													<td><a
+														href="<c:url value="/study/seeMyStudy?study_no=${study.study_no}"/>">${study.study_title}</a></td>
+													<td>${study.study_headCount}</td>
+												</tr>
+											</c:forEach>
+										</c:when>
+									</c:choose>
+								</table>
+							</div>
+							<div class="card-body">
 								<h4 class="card-title m-t-10">참여중인 스터디 목록</h4>
 								<hr>
 								<table class="table">
-									<thead>
-										<tr>
-											<th style="width: 20%">스터디 번호</th>
-											<th>스터디 이름</th>
-										</tr>
-									</thead>
-									<tbody>
-										<c:forEach items="${myStudyList}" var="study">
-											<tr>
-												<td>${study.study_no}</td>
-												<td><a
-													href="<c:url value="/study/seeMyStudy?study_no=${study.study_no}"/>">${study.study_title}
-												</a></td>
-											</tr>
-										</c:forEach>
-									</tbody>
+									<tr>
+										<th style="width: 20%">지역</th>
+										<th style="width: 20%">분야</th>
+										<th style="width: 45%">제목</th>
+										<th>인원</th>
+									</tr>
+									<c:choose>
+										<c:when test="${myPartStudyList != null}">
+											<c:forEach items="${myPartStudyList}" var="study">
+												<tr>
+													<td><c:choose>
+															<c:when test="${study.loc_no == 1}">서울</c:when>
+															<c:when test="${study.loc_no == 2}">경기</c:when>
+															<c:when test="${study.loc_no == 3}">경상</c:when>
+															<c:when test="${study.loc_no == 4}">전라</c:when>
+															<c:when test="${study.loc_no == 5}">제주</c:when>
+														</c:choose></td>
+													<td><c:choose>
+															<c:when test="${study.field_no == 1}">자격증</c:when>
+															<c:when test="${study.field_no == 2}">고시</c:when>
+															<c:when test="${study.field_no == 3}">출석</c:when>
+															<c:when test="${study.field_no == 4}">취업</c:when>
+															<c:when test="${study.field_no == 5}">기타</c:when>
+														</c:choose></td>
+													<td><a
+														href="<c:url value="/study/seeMyStudy?study_no=${study.study_no}"/>">${study.study_title}</a></td>
+													<td>${study.study_headCount}</td>
+												</tr>
+											</c:forEach>
+										</c:when>
+									</c:choose>
 								</table>
 							</div>
 						</div>

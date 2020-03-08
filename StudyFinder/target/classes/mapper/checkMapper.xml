@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nyk.sf.dao.CheckMapper">
+	<insert id="check" parameterType="checkVO">
+		insert into sf_check
+		(
+		CHECK_NO,
+		USERID,
+		STUDY_NO,
+		CHECKED,
+		CHECK_INPUTDATE,
+		CHECK_PENALTY
+		) values(
+		sf_check_seq.nextval,
+		#{userid},
+		#{study_no},
+		1,
+		sysdate,
+		#{check_penalty}
+		)
+	</insert>
+	<select id="myCheckResult" parameterType="checkVO"
+		resultType="checkVO">
+		select * from sf_check where study_no = #{study_no} and
+		userid = #{userid}
+	</select>
+</mapper>

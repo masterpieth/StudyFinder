@@ -10,5 +10,5 @@ public interface ReplyMapper {
 	public ArrayList<ReplyVO> replyList(int study_no);
 	public void writeReply(ReplyVO vo);
 	public void deleteReply(int reply_no);
-	public void updatePermission(String userid);
+	public void updatePermission(int reply_no);
 }

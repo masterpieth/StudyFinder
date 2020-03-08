@@ -9,6 +9,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.nyk.sf.vo.CheckVO;
 import com.nyk.sf.vo.ReplyVO;
 import com.nyk.sf.vo.StudyMemberVO;
 import com.nyk.sf.vo.StudyVO;
@@ -134,15 +135,23 @@ public class StudyDAO {
 		}
 	}
 
-	public ArrayList<ReplyVO> insertStudyMember(StudyMemberVO vo) {
-		System.out.println(vo.toString());
+	public int insertStudyMember(StudyMemberVO vo) {
+		int result = 0;
+		try {
+			StudyMemberMapper mapper = sqlSession.getMapper(StudyMemberMapper.class);
+			result = mapper.insertStudyMember(vo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	public ArrayList<ReplyVO> updatePermission(ReplyVO vo) {
 		ArrayList<ReplyVO> list = null;
 		try {
-			StudyMemberMapper smapper = sqlSession.getMapper(StudyMemberMapper.class);
-			ReplyMapper rmapper = sqlSession.getMapper(ReplyMapper.class);
-			smapper.insertStudyMember(vo);
-			rmapper.updatePermission(vo.getPart_userid());
-			list = rmapper.replyList(vo.getStudy_no());
+			ReplyMapper mapper = sqlSession.getMapper(ReplyMapper.class);
+			mapper.updatePermission(vo.getReply_no());
+			list = mapper.replyList(vo.getStudy_no());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -172,12 +181,15 @@ public class StudyDAO {
 	}
 
 	public StudyVO seeMyStudy(HttpSession session, int study_no) {
-		String part_userid = (String)session.getAttribute("userid");
+		String part_userid = (String) session.getAttribute("userid");
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("study_no", study_no);
+		map.put("part_userid", part_userid);
 		StudyVO result = null;
 		try {
 			StudyMapper mapper = sqlSession.getMapper(StudyMapper.class);
-			result = mapper.seeMyStudy(part_userid);
-			if(result == null) {
+			result = mapper.seeMyStudy(map);
+			if (result == null) {
 				result = readStudy(study_no);
 			}
 		} catch (Exception e) {
@@ -185,4 +197,52 @@ public class StudyDAO {
 		}
 		return result;
 	}
+
+	public ArrayList<StudyVO> myPartStudyList(HttpSession session) {
+		String part_userid = (String) session.getAttribute("userid");
+		ArrayList<StudyVO> list = null;
+		try {
+			StudyMapper mapper = sqlSession.getMapper(StudyMapper.class);
+			list = mapper.myPartStudyList(part_userid);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	public void updateHit(int study_no) {
+		try {
+			StudyMapper mapper = sqlSession.getMapper(StudyMapper.class);
+			mapper.updateHit(study_no);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public int check(CheckVO vo, HttpSession session) {
+		String userid = (String) session.getAttribute("userid");
+		vo.setUserid(userid);
+		int result = 0;
+		try {
+			CheckMapper mapper = sqlSession.getMapper(CheckMapper.class);
+			result = mapper.check(vo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	public ArrayList<CheckVO> myCheckResult(CheckVO vo, HttpSession session) {
+		String userid = (String) session.getAttribute("userid");
+		vo.setUserid(userid);
+		ArrayList<CheckVO> result = null;
+		try {
+			CheckMapper mapper = sqlSession.getMapper(CheckMapper.class);
+			result = mapper.myCheckResult(vo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
 }

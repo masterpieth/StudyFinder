@@ -11,9 +11,12 @@ public interface StudyMapper {
 	public StudyVO studyInfo(int study_no);
 	public ArrayList<StudyVO> studyList();
 	public ArrayList<StudyVO> searchStudy(HashMap<String, String> map);
+	
 	public ArrayList<StudyVO> myStudyList(String userid);
+	public ArrayList<StudyVO> myPartStudyList(String part_userid);
 	public int deleteStudy(int study_no);
 	public int updateStudy(StudyVO vo);
 	
-	public StudyVO seeMyStudy(String part_userid);
+	public StudyVO seeMyStudy(HashMap<String, Object> map);
+	public void updateHit(int study_no);
 }

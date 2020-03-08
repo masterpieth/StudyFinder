@@ -66,6 +66,7 @@
 		order by
 		study_no desc
 	</select>
+	
 	<update id="updateStudy" parameterType="studyVO">
 		update sf_study
 		set
@@ -83,6 +84,7 @@
 		where
 		study_no = #{study_no}
 	</update>
+	
 	<select id="myStudyList" resultType="studyVO"
 		parameterType="string">
 		select * from sf_study
@@ -91,7 +93,8 @@
 		order
 		by study_no desc
 	</select>
-	<select id="seeMyStudy" resultType="studyVO"
+	
+	<select id="myPartStudyList" resultType="studyVO"
 		parameterType="string">
 		select
 		s.STUDY_NO,
@@ -112,8 +115,38 @@
 		from sf_study s, sf_studymember sm
 		where s.study_no = sm.study_no and sm.part_userid = #{part_userid}
 	</select>
+	
+	<select id="seeMyStudy" resultType="studyVO"
+		parameterType="map">
+		select
+		s.STUDY_NO,
+		s.Auth_USERID,
+		s.STUDY_TITLE,
+		s.STUDY_CONTENT,
+		s.FIELD_NO,
+		s.LOC_NO,
+		s.STUDY_LEVEL,
+		s.STUDY_HEADCOUNT,
+		s.STUDY_INPUTDATE,
+		s.study_hit,
+		s.DUE_TIME,
+		s.PENALTY_MIN,
+		s.PENALTY_MONEY,
+		s.LIMIT_TIME,
+		s.PENALTY_TOTAL
+		from sf_study s, sf_studymember sm
+		where s.study_no = sm.study_no and sm.part_userid = #{part_userid} and s.study_no = #{study_no}
+	</select>
+	
 	<delete id="deleteStudy" parameterType="int">
 		delete from sf_study
 		where study_no = #{study_no}
 	</delete>
+	<update id="updateHit" parameterType="int">
+	update sf_study
+	set
+	study_hit = study_hit + 1
+	where
+	study_no = #{study_no}
+	</update>
 </mapper>

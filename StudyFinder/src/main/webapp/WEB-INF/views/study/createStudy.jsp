@@ -439,7 +439,7 @@
 												<div class="form-group row">
 													<div class="col-md-12 text-right">
 														<input type="submit" class="btn btn-info" value="글 작성">
-														<input type="button" class="btn btn-dark" value="돌아가기">
+														<input type="button" class="btn btn-dark" value="돌아가기" onclick="history.go(-1)">
 													</div>
 												</div>
 											</form>

@@ -113,7 +113,8 @@
 									aria-expanded="false"> <c:choose>
 											<c:when
 												test="${sessionScope.member.user_savedFileName != null }">
-												<img src="/sf/resources/imgUpload/${sessionScope.member.user_savedFileName}"
+												<img
+													src="/sf/resources/imgUpload/${sessionScope.member.user_savedFileName}"
 													alt="user" class="rounded-circle" width="31">
 											</c:when>
 											<c:when
@@ -349,24 +350,46 @@
 									</div>
 									<div class="form-group">
 										<label class="col-md-12">개설중인 스터디</label>
-										<table class="table">
-											<thead>
+										<div class="col-md-12">
+											<table class="table">
 												<tr>
-													<th style="width: 20%">번호</th>
-													<th>스터디 이름</th>
+													<th style="width: 20%">지역</th>
+													<th style="width: 20%">분야</th>
+													<th style="width: 45%">제목</th>
+													<th>인원</th>
 												</tr>
-											</thead>
-											<tbody>
-												<c:forEach items="${studyList}" var="study">
-													<tr>
-														<td>${study.study_no}</td>
-														<td><a
-															href="<c:url value="/study/seeMyStudy?study_no=${study.study_no}"/>">${study.study_title}
-														</a></td>
-													</tr>
-												</c:forEach>
-											</tbody>
-										</table>
+												<c:choose>
+													<c:when test="${studyList != null}">
+														<c:forEach items="${studyList}" var="study">
+															<tr>
+																<td><c:choose>
+																		<c:when test="${study.loc_no == 1}">서울</c:when>
+																		<c:when test="${study.loc_no == 2}">경기</c:when>
+																		<c:when test="${study.loc_no == 3}">경상</c:when>
+																		<c:when test="${study.loc_no == 4}">전라</c:when>
+																		<c:when test="${study.loc_no == 5}">제주</c:when>
+																	</c:choose></td>
+																<td><c:choose>
+																		<c:when test="${study.field_no == 1}">자격증</c:when>
+																		<c:when test="${study.field_no == 2}">고시</c:when>
+																		<c:when test="${study.field_no == 3}">출석</c:when>
+																		<c:when test="${study.field_no == 4}">취업</c:when>
+																		<c:when test="${study.field_no == 5}">기타</c:when>
+																	</c:choose></td>
+																<td><a
+																	href="<c:url value="/study/seeMyStudy?study_no=${study.study_no}"/>">${study.study_title}</a></td>
+																<td>${study.study_headCount}</td>
+															</tr>
+														</c:forEach>
+													</c:when>
+													<c:when test="${studyList == null}">
+														<div class="card-body">
+															<h4 class="card-title">개설중인 스터디가 없습니다.</h4>
+														</div>
+													</c:when>
+												</c:choose>
+											</table>
+										</div>
 									</div>
 									<div class="form-group">
 										<div class="col-sm-12" style="text-align: right;">

@@ -260,7 +260,7 @@
 					<div class="col-lg-6">
 						<div class="card">
 							<div class="card-body todo-widget scrollable"
-								style="height: 450px;">
+								style="height: 485px;">
 								<h4 class="card-title">최신 스터디</h4>
 								<div class="card" style="text-align: right;">
 									<a href="<c:url value="/study/studyList"/>">더보기</a>
@@ -300,7 +300,7 @@
 					<div class="col-lg-6">
 						<div class="card">
 							<div class="card-body todo-widget scrollable"
-								style="height: 450px;">
+								style="height: 225px;">
 								<h4 class="card-title">개설중인 스터디 목록</h4>
 								<div class="card" style="text-align: right;">
 									<a href="<c:url value="/study/myStudy"/>">더보기</a>
@@ -331,7 +331,7 @@
 															<c:when test="${study.field_no == 5}">기타</c:when>
 														</c:choose></td>
 													<td><a
-														href="<c:url value="/study/studyInfo?study_no=${study.study_no}"/>">${study.study_title}</a></td>
+														href="<c:url value="/study/seeMyStudy?study_no=${study.study_no}"/>">${study.study_title}</a></td>
 													<td>${study.study_headCount}</td>
 												</tr>
 											</c:forEach>
@@ -342,7 +342,46 @@
 											</div>
 										</c:when>
 									</c:choose>
-
+								</table>
+							</div>
+							<hr>
+							<div class="card-body todo-widget scrollable"
+								style="height: 225px;">
+								<h4 class="card-title">참여중인 스터디 목록</h4>
+								<div class="card" style="text-align: right;">
+								</div>
+								<table class="table">
+									<tr>
+										<th style="width: 20%">지역</th>
+										<th style="width: 20%">분야</th>
+										<th style="width: 45%">제목</th>
+										<th>인원</th>
+									</tr>
+									<c:choose>
+										<c:when test="${myPartStudyList != null}">
+											<c:forEach items="${myPartStudyList}" var="study">
+												<tr>
+													<td><c:choose>
+															<c:when test="${study.loc_no == 1}">서울</c:when>
+															<c:when test="${study.loc_no == 2}">경기</c:when>
+															<c:when test="${study.loc_no == 3}">경상</c:when>
+															<c:when test="${study.loc_no == 4}">전라</c:when>
+															<c:when test="${study.loc_no == 5}">제주</c:when>
+														</c:choose></td>
+													<td><c:choose>
+															<c:when test="${study.field_no == 1}">자격증</c:when>
+															<c:when test="${study.field_no == 2}">고시</c:when>
+															<c:when test="${study.field_no == 3}">출석</c:when>
+															<c:when test="${study.field_no == 4}">취업</c:when>
+															<c:when test="${study.field_no == 5}">기타</c:when>
+														</c:choose></td>
+													<td><a
+														href="<c:url value="/study/seeMyStudy?study_no=${study.study_no}"/>">${study.study_title}</a></td>
+													<td>${study.study_headCount}</td>
+												</tr>
+											</c:forEach>
+										</c:when>
+									</c:choose>
 								</table>
 							</div>
 						</div>

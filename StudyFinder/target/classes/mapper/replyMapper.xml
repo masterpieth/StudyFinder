@@ -7,6 +7,7 @@
 		select *
 		from sf_reply
 		where study_no = #{study_no}
+		order by reply_no
 	</select>
 	<insert id="writeReply" parameterType="replyVO">
 		insert into sf_reply
@@ -35,6 +36,6 @@
 		set
 		permission = 1
 		where
-		userid = #{userid}
+		reply_no = #{reply_no}
 	</update>
 </mapper>

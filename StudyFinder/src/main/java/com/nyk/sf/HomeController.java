@@ -25,6 +25,8 @@ public class HomeController {
 		model.addAttribute("studyList", list);
 		ArrayList<StudyVO> mylist = dao.myStudyList(session);
 		model.addAttribute("myStudyList", mylist);
+		ArrayList<StudyVO> myPartStudyList = dao.myPartStudyList(session);
+		model.addAttribute("myPartStudyList", myPartStudyList);
 		return "home";
 	}
 }

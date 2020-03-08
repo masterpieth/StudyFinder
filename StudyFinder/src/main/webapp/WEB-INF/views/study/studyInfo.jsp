@@ -95,9 +95,11 @@
 							str += '<td>' + item.reply_inputdate + '</td>';
 							if (item.userid == "${sessionScope.userid}") {
 								str += '<td><input type="button" class="btn btn-secondary deleteReplyBtn" value="삭제"></td></tr>';
-							} else if ("${study.auth_userid}" == "${sessionScope.userid}" && item.permission == 0) {
+							} else if ("${study.auth_userid}" == "${sessionScope.userid}"
+									&& item.permission == 0) {
 								str += '<td><input type="button" class="btn btn-info joinBtn" id="rno'+ item.reply_no +'" value="승인"></td></tr>';
-							} else if ("${study.auth_userid}" == "${sessionScope.userid}" && item.permission == 1) {
+							} else if ("${study.auth_userid}" == "${sessionScope.userid}"
+									&& item.permission == 1) {
 								str += '<td><input type="button" class="btn btn-info joinBtn" id="rno'+ item.reply_no +'" disabled="disabled" value="승인"></td></tr>'
 							}
 						});
@@ -136,38 +138,64 @@
 
 							var replyNo = $(this).closest('tr').find('td')
 									.eq(0).text();
+							var replyNoInt = parseInt(replyNo, 10);
 							var targetBtnId = "rno" + replyNo;
 
 							var part_user = $(this).closest('tr').find('td')
 									.eq(1).text();
 							var auth_user = "${study.auth_userid}";
 
-							var paramObj = {
+							var data = {
 								study_no : studyNoInt,
 								auth_userid : auth_user,
-								part_userid : part_user,
-							}
+								part_userid : part_user
+							};
+							var jsonData = JSON.stringify(data);
+							$
+									.ajax({
+										url : "insertStudyMember",
+										type : "post",
+										data : jsonData,
+										contentType : "application/json; charset=UTF-8",
+										success : function(data) {
+											if (data) {
+												var per = {
+													study_no : studyNoInt,
+													reply_no : replyNoInt
+												};
 
-							$.ajax({
-								url : "insertStudyMember",
-								type : "post",
-								data : JSON.stringify(paramObj),
-								contentType : "application/json",
-								success : function(data) {
-									if (data) {
-										alert("승인에 성공하였습니다.");
-										$('#' + $.escapeSelector(targetBtnId))
-												.attr('disabled', 'disabled');
-										replyOutput(data);
-									} else {
-										alert("승인에 실패하였습니다.");
-									}
-								},
-								error : function(e) {
-									console.log(e);
-								}
-							});
+												alert("승인에 성공하였습니다.");
+												$(
+														'#'
+																+ $
+																		.escapeSelector(targetBtnId))
+														.attr('disabled',
+																'disabled');
+												updatePermission(per);
+											} else {
+												alert("승인에 실패하였습니다.");
+											}
+										},
+										error : function(e) {
+											console.log(e);
+										}
+									});
 						});
+	}
+	function updatePermission(per) {
+		var pJsonData = JSON.stringify(per);
+		console.log(pJsonData);
+		$.ajax({
+			url : "updatePermission",
+			type : "post",
+			data : pJsonData,
+			contentType : "application/json; charset=UTF-8",
+			success : function(data) {
+				replyOutput(data);
+			},
+			error : function() {
+			}
+		});
 	}
 </script>
 </head>
@@ -230,7 +258,8 @@
 										<a class="dropdown-item" href="javascript:void(0)"><i
 											class="ti-user m-r-5 m-l-5"></i> ${sessionScope.userid} 님</a>
 										<div class="dropdown-divider"></div>
-										<a class="dropdown-item" href="<c:url value="/member/myPage"/>"><i
+										<a class="dropdown-item"
+											href="<c:url value="/member/myPage"/>"><i
 											class="ti-user m-r-5 m-l-5"></i> 마이페이지</a>
 										<div class="dropdown-divider"></div>
 										<a class="dropdown-item"
@@ -323,6 +352,11 @@
 															name="auth_userid" id="userid"
 															value="${study.auth_userid}" readonly="readonly">
 													</div>
+												</div>
+												<div class="form-group row">
+													<label
+														class="col-sm-2 text-center control-label col-form-label">조회수</label>
+													<div class="col-sm-10">${study.study_hit}</div>
 												</div>
 												<hr>
 												<div class="form-group row">
@@ -472,8 +506,8 @@
 														<input type="button" id="deleteBtn" class="btn btn-dark"
 															value="글삭제">
 													</c:if>
-													<a href="<c:url value="/study/studyList"/>">
-													<input type="button" class="btn btn-secondary" value="돌아가기"></a>
+													<a href="<c:url value="/study/studyList"/>"> <input
+														type="button" class="btn btn-secondary" value="돌아가기"></a>
 												</div>
 											</div>
 											<div class="form-group row">

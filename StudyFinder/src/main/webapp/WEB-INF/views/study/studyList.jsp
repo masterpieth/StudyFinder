@@ -27,6 +27,11 @@
 		$('#searchBtn').on('click', function() {
 			searchItem();
 		});
+		$('#searchKeyword').on('keyup',function(data){
+			if(data.keyCode == 13){
+				$('#searchBtn').click();
+			}
+		});
 	});
 
 	function searchItem() {
@@ -42,7 +47,6 @@
 				"searchKeyword" : keyword
 			},
 			success : function(data) {
-				console.log(data);
 				output(data);
 				$('#searchKeyword').val("");
 			},

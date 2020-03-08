@@ -16,6 +16,5 @@ public class MemberVO {
 	private String user_savedFileName;
 	private int field_no;
 	private int loc_no;
-	private String thumbImg;
 	private String img;
 }

@@ -11,11 +11,13 @@
 		<typeAlias type="com.nyk.sf.vo.StudyVO" alias="studyVO"/>
 		<typeAlias type="com.nyk.sf.vo.ReplyVO" alias="replyVO"/>
 		<typeAlias type="com.nyk.sf.vo.StudyMemberVO" alias="studyMemberVO"/>
+		<typeAlias type="com.nyk.sf.vo.CheckVO" alias="checkVO"/>
 	</typeAliases>
 	<mappers>
 	<mapper resource="mapper/memberMapper.xml" />
 	<mapper resource="mapper/studyMapper.xml" />
 	<mapper resource="mapper/replyMapper.xml" />
 	<mapper resource="mapper/studyMemberMapper.xml" />
+	<mapper resource="mapper/checkMapper.xml" />
 	</mappers>
 </configuration>
