@@ -21,7 +21,7 @@
 <link
 	href="${pageContext.request.contextPath}/resources/dist/css/style.min.css"
 	rel="stylesheet">
-<title>글작성</title>
+<title>글수정</title>
 <script src="/sf/resources/js/jquery-3.4.1.js"></script>
 <script>
 	$(function() {
