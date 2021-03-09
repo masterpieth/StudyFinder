@@ -73,7 +73,7 @@ public class MemberDAO {
 		}
 	}
 
-	private final String uploadPath ="C:\\Users\\pieTH\\git\\StudyFinder\\StudyFinder\\src\\main\\webapp\\resources\\imgUpload";
+	private final String uploadPath ="C:\\git\\StudyFinder\\StudyFinder\\src\\main\\webapp\\resources\\imgUpload";
 	public void updatePic(HttpSession session, MultipartFile uploadFile) {
 		String userid = (String) session.getAttribute("userid");
 		MemberVO vo = searchMember(userid);
@@ -92,7 +92,7 @@ public class MemberDAO {
 				vo.setUser_savedFileName(savedFileName);
 				vo.setImg(img);
 				try {
-					uploadFile.transferTo(new File(uploadPath + "\\" + savedFileName));
+					uploadFile.transferTo(new File(uploadPath + "\\" + savedFileName + ".jpg"));
 				} catch (IllegalStateException | IOException e) {
 					e.printStackTrace();
 				}

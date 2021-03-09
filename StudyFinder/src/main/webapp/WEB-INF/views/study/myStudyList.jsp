@@ -68,7 +68,7 @@
 											<c:when
 												test="${sessionScope.member.user_savedFileName != null }">
 												<img
-													src="/sf/resources/imgUpload/${member.user_savedFileName}"
+													src="/sf/resources/imgUpload/${member.user_savedFileName}.jpg"
 													alt="user" class="rounded-circle" width="31">
 											</c:when>
 											<c:when
@@ -169,7 +169,7 @@
 								<c:choose>
 									<c:when test="${member.user_savedFileName != null}">
 										<img
-											src="/sf/resources/imgUpload/${member.user_savedFileName}"
+											src="/sf/resources/imgUpload/${member.user_savedFileName}.jpg"
 											class="img-fluid rounded-circle">
 									</c:when>
 									<c:when test="${member.user_savedFileName == null}">
